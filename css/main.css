@@ -1,0 +1,15 @@
+@import url(./reset.css);
+@import url(./custom-properties.css);
+@import url(./layout.css);
+@import url(./objects/canvas.css);
+@import url(./objects/Field.css);
+@import url(./objects/Pipe.css);
+@import url(./objects/Bird.css);
+@import url(./objects/buttons.css);
+
+.invisible {
+    display: none;
+}
+.blured {
+    filter: blur(5px);
+}

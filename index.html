@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/main.css">
+    <title>Flappy Bird</title>
+</head>
+
+<body>
+    <div class="game">
+        <canvas id="canvas"></canvas>
+        <div class="game-info invisible">
+            <div class="score">
+                <h3 class="score__title">Score:</3>
+                <span class="score__count"></span>
+            </div>
+            <div class="record">
+                <h3 class="record__title">Record:</3>
+                <span class="record__count"></span>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="new-game-btn" class="button">New Game</button>
+            <button id="stop-btn" class="button">Stop</button>
+            <button id="continue-btn" class="button">Continue</button>
+        </div>
+    </div>
+    <script src="./script/main.js" type="module" ></script>
+    <script src="./script/events.js" type="module" ></script>
+</body>
+
+</html>
