@@ -1,43 +1,75 @@
-
 export default class Bird {
-    constructor(ctx) {
-       
-        this.ctx = ctx;
-        
-        // this.width = 10;
-        // this.height = 10;
-        // this.x = 200;
-        // this.y = 300;
-        // this.speed = 0;
+    constructor(params) {
+        this._params = params;
+        this.imgs =params.imgs;
+        this.x = params.x;
+        this.y = params.y;
+        this.width = params.width;
+        this.height = params.height;
 
-        this.isDead = false;
+        this.flySpeed = params.flySpeed;
+        this.fallStartSpeed = params.fallStartSpeed;
+        // console.log(this.fallSpeed);
+        this._drawEngine = params.drawEngine;
+        this._physicsEngine = params.physicsEngine;
+        // this.isDead = false;
+        this._state = 0;
+        this._flapId = null;
     }
-    create(img, x, y, width, height) {
 
-        const bird = {
-            img: img,
-            x: x,
-            y: y,
-            width: width,
-            height: height
+    draw(state) {
+        this._physicsEngine.update(this);  // this.fall();
+
+        if (this.y < 0) {
+            this.y = 0;
         }
-        this.ctx.drawImage(bird.img, bird.x, bird.y, bird.width, bird.height)
-
-        console.log('Bird created');
+        this._drawEngine.draw(
+            this.imgs[state],
+            this.x,
+            this.y,
+            this.width,
+            this.height
+        )
     }
+    // animate = () => {
+    //     this.create();
+    // }
     // update() {
         
     // }
     fly() {
-
+        this.y -= this.flySpeed;
+        
+        this._physicsEngine.resetSpeed();
+        this.animate();
     }
-    fall() {
-
+    animate() {
+        this._flapId = setInterval(this.flap(), 1000);
     }
-    hit() {
-
+    flap() {
+        if (this._state >= this.imgs.length) {
+            this._state = 0;
+            clearInterval(this._flapId);
+        } else {
+            this.draw(this._state);
+            this._state +=1;
+        }
     }
-    die () {
-
+    // fall() {
+    //     this.params.y += this.params.fallSpeed;
+    // }
+    isDead(fieldHeight) {
+       if(
+        this.y + this.height >= fieldHeight 
+        // || pipe.hittedPipe(this.params.x, this.params.y)
+        ) {
+        return true;
+       }
+       return false;
     }
+    // die () {
+    //     // this.isDead = true;
+    //     console.log('Bird died');
+    //     // new Bird(birdStates, birdX, birdY, birdWidth, birdHeight);
+    // }
 }

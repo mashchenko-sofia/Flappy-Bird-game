@@ -1,11 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
+
 @import url(./reset.css);
 @import url(./custom-properties.css);
+@import url(./style.css);
+@import url(./canvas.css);
 @import url(./layout.css);
-@import url(./objects/canvas.css);
-@import url(./objects/Field.css);
-@import url(./objects/Pipe.css);
-@import url(./objects/Bird.css);
-@import url(./objects/buttons.css);
+@import url(./game-info.css);
+@import url(./menu.css);
+@import url(./buttons.css);
+@import url(./media-queries.css);
 
 .invisible {
     display: none;

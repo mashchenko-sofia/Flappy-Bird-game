@@ -1,5 +1,5 @@
 export default class Background { 
-    constructor(ctx) {
+    constructor(params) {
         this.ctx = ctx;
         // this.width = 1000;
         // this.height = 600;

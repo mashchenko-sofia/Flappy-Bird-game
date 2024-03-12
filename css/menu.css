@@ -1,0 +1,13 @@
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+
+    position : absolute;
+    z-index: 3;
+}
+.game-over-window__text {
+    font-size: 2em;
+    font-weight: 600;
+    text-align: center;
+}

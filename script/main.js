@@ -3,24 +3,31 @@ import Game from "./classes/Game.js";
 
 const game = new Game();
 
-const newGameBtn = document.getElementById("new-game-btn");
-const stopBtn = document.getElementById("stop-btn");
-const continueBtn = document.getElementById("continue-btn");
 
-newGameBtn.addEventListener("click", () => {
-    game.create();
+
+game._config.newGameBtn.addEventListener("click", () => {
+    game.start();
+});
+game._config.continueBtn.addEventListener("click", () => { 
     game.start();
 });
 
-stopBtn.addEventListener("click", () => {
-    // game.stop();
+
+
+document.addEventListener("keydown", (e) => {
+    e.preventDefault();
+    if (e.code === 'Space') {
+        game.bird.fly();
+        
+    } 
+    if (e.code === 'Tab' || e.code === 'Escape') { 
+        game.stop();
+
+        // game._config.continueBtn.classList.remove('invisible');
+    }
+});
+document.addEventListener("click", (e) => {
+    game.bird.fly();
+    // game._physicsEngine.resetSpeed();
 });
 
-continueBtn.addEventListener("click", () => { 
-    // game.start();
-});
-
-// window.addEventListener('resize', () => {
-//     game.bird.create();
-//     game.pipe.create();
-// });

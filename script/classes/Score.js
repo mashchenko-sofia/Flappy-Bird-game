@@ -1,13 +1,14 @@
 export default class Score {
-    constructor(){
+    constructor(params){
+        this.params = params;
         this._currentScore = 0;
         this._record;
-
-        this.scoreBox = document.getElementById("score__count");
-        this.recordBox = document.getElementById("record__count");
+        // console.log(this.params.scoreBox, this.params.recordBox);
+        this.scoreBox = this.params.scoreBox
+        this.recordBox = this.params.recordBox
     }
     update() {
-        this.increaseScore();
+        // this.increaseScore();
         this.setRecord();
         this.create();
     }
@@ -18,7 +19,8 @@ export default class Score {
         this.recordBox.innerHTML = this._record;
     }
     increaseScore() {
-        this.currentScore += 1;
+        this._currentScore += 1;
+        this.update()
     }
     setRecord() {
         if (this._currentScore > this._record) {
