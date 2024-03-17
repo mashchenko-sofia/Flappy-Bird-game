@@ -13,128 +13,62 @@ import Score from "./Score.js";
 export default class Game {
     constructor() {
         this._config = new Config();
-        this._drawEngine = new CanvasDrawEngine(this._config.fieldWidth, this._config.fieldHeight);
-        this._physicsEngine = new PhysicsEngine();
+        this._drawEngine = new CanvasDrawEngine({
+            config: this._config,
+        });
+        this._physicsEngine = new PhysicsEngine({
+            config: this._config,
+        });
 
-        this.index = 0;
-        this.xOffset = 0;
-        // this.state = 0;
-
-        this.gameAnimationId = 0;
+        this._gameAnimationId = 0;
     }
     reset() {
-        // this.bg = new Background({
-        //     img: this._config.bgImg,
-        //     x: this._config.BG_X,
-        //     y: this._config.BG_Y,
-        //     width: this._config.BG_WIDTH,
-        //     height: this._config.BG_HEIGHT,
-        //     drawEngine: this._drawEngine,
-        // });
+        this.score = new Score({
+            config: this._config,
+        });
+        this.bg = new Background({
+            config: this._config,
+            drawEngine: this._drawEngine,
+        });
         this.ground = new Ground({
-            img: this._config.groundImg,
-            x: this._config.GROUND_X,
-            y: this._config.GROUND_Y,
-            width: this._config.GROUND_WIDTH,
-            height: this._config.GROUND_HEIGHT,
+            config: this._config,
             drawEngine: this._drawEngine,
         });
         this.pipe = new Pipe({
-            imgUp: this._config.pipeUpImg,
-            imgDown: this._config.pipeDownImg,
-            x: this._config.PIPE_X,
-            yUp: this._config.PIPE_UP_Y,
-            yDown: this._config.PIPE_DOWN_Y,
-            width: this._config.PIPE_WIDTH,
-
-            heightSum: this._config.SUM_PIPE_HEIGHT,
-            heightMin: this._config.PIPE_HEIGHT_MIN,
-            heightMax: this._config.PIPE_HEIGHT_MAX,
-            
-            fieldWidth: this._config.fieldWidth,
-            fieldHeight: this._config.fieldHeight,
-            // height: this._config.PIPE_HEIGHT,
-            // hole: this._config.PIPE_HOLE,
-            spawnPoint: this._config.PIPE_SPAWN_POINT,
-            scorePoint: this._config.PIPE_SCORE_POINT,
-            // gap: this._config.PIPE_GAP,
-            padding: this._config.PIPE_PADDING,
-            moveSpeed: this._config.PIPE_MOVE_SPEED,
-            // spawnSpeed: this._config.PIPE_SPAWN_SPEED,
+            config: this._config,
             drawEngine: this._drawEngine,
+            score: this.score,
         });
         this.bird = new Bird({
-            imgs: this._config.birdStates,
-            x: this._config.BIRD_X,
-            y: this._config.BIRD_Y,
-            width: this._config.BIRD_WIDTH,
-            height: this._config.BIRD_HEIGHT,
-            rotation: this._config.BIRD_ROTATION,
-            rotationDegree: this._config.BIRD_ROTATION_DEGREE,
-            flySpeed: this._config.BIRD_FLY_SPEED,
-            fallStartSpeed: this._config.BIRD_FALL_START_SPEED,
-            animationSpeed: this._config.BIRD_ANIMATION_SPEED,
+            config: this._config,
             drawEngine: this._drawEngine,
             physicsEngine: this._physicsEngine,
         });
-        this.score = new Score({
-            scoreBox: this._config.scoreBox,
-            recordBox: this._config.recordBox,
-        });
-        // console.log(this._config.scoreBox)
     }
-    draw() {
-        // this.bg.draw();
+    update() {
+        this.bg.draw();
         this.ground.draw();
-        this.bird.draw(0);
-
-        // this.index += 0.3;
-        // this.xOffset = -((this.index * this._config.PIPE_MOVE_SPEED) % (this._config.fieldWidth + this._config.PIPE_WIDTH));
-        this.pipe.draw();
-        if (this.pipe._pipes[0].x - this._config.PIPE_WIDTH / 2  == this._config.BIRD_X) {
-            this.score.increaseScore();
-        }
-        // this.bird.draw(0);
+        this.bird.update();
+        this.pipe.update();
     }
     animate = () => {
         this._drawEngine.clear();
 
+        this.update();
 
         if(this.bird.isDead(this._config.fieldHeight)) {
+            this._config.dieSound.play();
+            this._config.dieSound.currentTime = 0;
+            
             this.finish();
         } else {
-            this.draw();
-            this.gameAnimationId = requestAnimationFrame(this.animate);
+            this._gameAnimationId = requestAnimationFrame(this.animate);
         }
     }
-    // animate = () => {
-    //     ctx.clearRect( 0, 0, canvas.width, canvas.height );
-
-    //     this.index += 0.3;
-    //     this.xOffset = -((this.index * ANIMATION_SPEED) % (canvas.width + pipeDownProp.width));
-        
-    //     this.pipe.create(ctx, this.xOffset);
-    //     // this.background.create();
-
-    //     if (this.bird.isDead(canvas, this.pipe)) {
-    //         this.finish();
-    //     } else {
-    //         this.bird.create(ctx, this.state);
-
-    //         this.state +=1;
-    //         if (this.state >= birdProp.img.length) {
-    //             this.state = 0;
-    //         }
-
-    //         this.gameAnimationId = requestAnimationFrame(this.animate);
-    //     }
-        
-    // };
-    // animate() {
-        
-    // }
     start() {
         this.reset();
+        this.score.update();
+
         this.animate();
 
         this._config.newGameBtn.classList.add('invisible');
@@ -145,10 +79,8 @@ export default class Game {
 
     }
     stop() {
-        // this.drawEngine.clear();
-        // this.drawEngine.stop();
-        cancelAnimationFrame(this.gameAnimationId);
-        
+        cancelAnimationFrame(this._gameAnimationId);
+
         this._physicsEngine.resetSpeed()
 
         this._config.gameInfo.classList.add('invisible');
@@ -156,32 +88,16 @@ export default class Game {
         this._config.continueBtn.classList.remove('invisible');
 
     }
-    // update() {
-
-    // }
     finish() {
         this.stop();
-
-        this._config.newGameBtn.classList.remove('invisible');
-        this._config.gameOverWindow.classList.remove('invisible');
         this._config.continueBtn.classList.add('invisible');
+        
+        // this.score.setRecord()
+        setTimeout(() => {
+            this._drawEngine.clear();
+            this._config.newGameBtn.classList.remove('invisible');
+            this._config.gameOverWindow.classList.remove('invisible');
 
-        // this.index = 0;
-        // this.xOffset = 0;
-        // this.state = 0;
-
-        // this.pipe.pipeDownProp = pipeDownProp;
-        // this.pipe.pipeUpProp = pipeUpProp;
-        // this.background = new Background(backgroundProp);
-
-        // this.background = new Background(backgroundProp);
-
-        // ctx.clearRect( 0, 0, canvas.width, canvas.height );
-
-        // this.reset();
-
-        // this.pipe = new Pipe(PIPE_PADDING, pipeDownProp, pipeUpProp);
-        // this.bird = new Bird(BIRD_FALL_SPEED, BIRD_FLY_HEIGHT, birdProp);
-        // this.score = new Score();
+        }, 1000)
     }
 }

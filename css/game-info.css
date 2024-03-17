@@ -1,4 +1,4 @@
-#game-info {
+.game-info {
     background-color: white;
     border-radius: 10px;
     padding: 15px;
@@ -8,13 +8,23 @@
 
     z-index: 2;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    align-self: end;
+    /* flex-direction: column; */
+    /* align-items: center; */
+    /* justify-content: center; */
+    align-self: start;
     /* justify-self: end ; */
-    gap: 1.5em;
+    gap: 1em;
+
+    box-shadow: 0px 0px 20px 10px rgb(255, 255, 255, 0.5);
+    background: transparent;
+    color: white;
+
+    font-size: 2em;
 
     /* width: 10vw; */
     /* height: 10vh; */
+}
+.info {
+    display: flex;
+    gap: 0.5em;
 }

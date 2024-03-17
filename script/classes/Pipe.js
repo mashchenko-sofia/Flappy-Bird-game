@@ -1,41 +1,30 @@
-// const canvas = document.getElementById('canvas');
-// canvas.width = document.documentElement.clientWidth * 2;
-
 export default class Pipe {
     constructor(params) {
-        this._params = params;
-        // this.ctx = ctx;
-        // this.index = 0;
-        // this.xOffset = 0;
-        // this.speed = speed;
-        // this.PADDING = padding;
-        // this.pipeDown = downProp;
-        // this.pipeUp = upProp;
-        this._heightSum = params.heightSum;
-        this._heightMin = params.heightMin;
-        this._heightMax = params.heightMax;
-
-        this._fieldWidth = params.fieldWidth;
-        this._fieldHeight = params.fieldHeight;
-
-        // this._hole = params.hole;
-        // this._gap = params.gap;
-        // console.log(this._gap, this._fieldWidth - this._gap)
-        // this._padding = params.padding;
-        this._moveSpeed = params.moveSpeed;
-        // this._spawnSpeed = params.spawnSpeed;
-        this._spawnPoint = params.spawnPoint;
-        this._scorePoint = params.scorePoint;
-
+        this._config = params.config;
         this._drawEngine = params.drawEngine;
+        this._score = params.score;
+        
+        this._imgUp = this._config.pipeUpImg;
+        this._imgDown = this._config.pipeDownImg;
+        this._x = this._config.PIPE_X;
+        this._yUp = this._config.PIPE_UP_Y;
+        this._yDown = this._config.PIPE_DOWN_Y;
+        this._width = this._config.PIPE_WIDTH;
+
+        this._heightSum = this._config.SUM_PIPE_HEIGHT;
+        this._heightMin = this._config.PIPE_HEIGHT_MIN;
+        this._heightMax = this._config.PIPE_HEIGHT_MAX;
+
+        this._fieldWidth = this._config.fieldWidth;
+        this._fieldHeight = this._config.fieldHeight;
+
+        this._padding = this._config.PIPE_PADDING;
+        this._moveSpeed = this._config.PIPE_MOVE_SPEED;
+
+        this._spawnPoint = this._config.PIPE_SPAWN_POINT;
+        this._scorePoint = this._config.PIPE_SCORE_POINT;
 
         this._pipes = [];
-        // this._pipes[0] = {
-        //     x: this.x += this._moveSpeed,
-        //     heightUp: getHeightUp(),
-        //     heightDown: getHeightDown(this.heightUp),
-        //     yDown: this._fieldHeight - this.heightDown,
-        // }
     }
     getHeightUp() {
         return Math.floor(Math.random() * (this._heightMax - this._heightMin + 1)) + this._heightMin;
@@ -46,75 +35,71 @@ export default class Pipe {
     // getYDown(heightDown) {
     //     return this._fieldHeight - heightDown;
     // }
-
+    isOnPoint(pipeCoor, point) {
+        return (pipeCoor % point <= this._moveSpeed) && (pipeCoor % point >= 0) && (pipeCoor / point < 2);
+    }
     newPipe() {
         const heightUp = this.getHeightUp();
         const heightDown = this.getHeightDown(heightUp);
         const yDown = this._fieldHeight - heightDown;
         this._pipes.push({
-            x: this._params.x,
+            x: this._x,
             yDown: yDown,
             heightUp: heightUp,
             heightDown: heightDown,
         });
-
-        // console.log('New pipe');
     }
-    draw() {
+    update() {
         if (this._pipes.length == 0) {
             this.newPipe();
         }
-        // console.log(this._pipes)
-        for (let i = 0; i < this._pipes.length; i++) {
-            this._drawEngine.draw(
-                this._params.imgDown, 
-                this._pipes[i].x, 
-                this._pipes[i].yDown, 
-                this._params.width, 
-                this._pipes[i].heightDown,
-            )
-            this._drawEngine.draw(
-                this._params.imgUp, 
-                this._pipes[i].x, 
-                this._params.yUp, 
-                this._params.width,
-                this._pipes[i].heightUp,
-            )
-            this._pipes[i].x -= this._moveSpeed;
-            if (Math.round(this._spawnPoint) == Math.round(this._pipes[i].x)) {
-                this.newPipe();
-            }
-            if (this._pipes[i].x - this._params.width == this._scorePoint) {
 
+        const lastPipeCoor = this._pipes[this._pipes.length - 1].x;
+        if (this.isOnPoint(lastPipeCoor, this._spawnPoint) && (lastPipeCoor <= this._spawnPoint)) {
+            this.newPipe();
+        }
+
+
+        for (let i = 0; i < this._pipes.length; i++) {
+            this.draw(i);
+
+            this._pipes[i].x -= this._moveSpeed;
+           
+            const pipeMidpointCoor = this._pipes[i].x + this._width / 2;
+            if (this.isOnPoint(pipeMidpointCoor, this._scorePoint) && (pipeMidpointCoor >= this._scorePoint)) {
+                this._score.increaseScore();
+                // this._config.scoreSound.play();
+                // this._config.scoreSound.currentTime = 0;
+
+                // УВЕЛИЧЕНИЕ СЛОЖНОСТИ 
+                if (this._score.currentScore == 10 || this._score.currentScore % 50 == 0 && this._score.currentScore > 0) {
+                    this._moveSpeed += 0.5;
+                    console.log('speed', this._moveSpeed);
+                }
             }
-            // console.log(Math.round(this._pipes[i].x), this._spawnPoint)
-            if (this._pipes[i].x + this._params.width < 0) {
+
+            const pipeLastpointCoor = this._pipes[i].x + this._width;
+            if (pipeLastpointCoor < 0) {
                 this._pipes.shift();
             }
         }
-        // console.log(this._pipes[0].x, this._gap)
-        // console.log('Pipe draw')
     }
-    // draw(xOffset) {
-    //     const heightUp = this.getHeightUp();
-    //     const heightDown = this.getHeightDown(heightUp);
-    //     const yDown = this._fieldHeight - heightDown;
-    //     this._drawEngine.draw(
-    //         this._params.imgDown, 
-    //         this._params.x + xOffset, 
-    //         yDown, 
-    //         this._params.width, 
-    //         heightDown,
-    //     )
-    //     this._drawEngine.draw(
-    //         this._params.imgUp, 
-    //         this._params.x + xOffset, 
-    //         this._params.yUp, 
-    //         this._params.width,
-    //         heightUp,
-    //     )
-
-    // }
+    draw(index) {
+            this._drawEngine.draw(
+                this._imgDown, 
+                this._pipes[index].x, 
+                this._pipes[index].yDown, 
+                this._width, 
+                this._pipes[index].heightDown,
+            )
+            this._drawEngine.draw(
+                this._imgUp, 
+                this._pipes[index].x, 
+                this._yUp, 
+                this._width,
+                this._pipes[index].heightUp,
+            )
+    }
 
     //     this.pipeDownSpaceVer = [this.pipeDown.y + this.PADDING, this.pipeDown.y + this.pipeDown.height];
     //     this.pipeDownSpaceHor = [this.pipeDown.x + xOffset + this.PADDING, this.pipeDown.x + xOffset + this.pipeDown.width - this.PADDING];
@@ -135,19 +120,4 @@ export default class Pipe {
             }
         return false;
     }
-
-    // animate = () => {
-    //     this.ctx.clearRect( 0, 0, canvas.width, canvas.height );
-
-    //     this.index += 0.3;
-    //     this.xOffset = -((this.index * this.speed) % canvas.width);
-
-    //     this.create()
-        
-    //     window.requestAnimationFrame(this.animate);
-    //     console.log('Pipe animated');
-    // };
-    // update() {
-
-    // }
 }

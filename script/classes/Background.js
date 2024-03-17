@@ -1,23 +1,24 @@
-export default class Background { 
+export default class Background {
     constructor(params) {
-        this.ctx = ctx;
-        // this.width = 1000;
-        // this.height = 600;
-        // this.x = 0;
-        // this.y = 0;
+        this._config = params.config
+        this._drawEngine = params.drawEngine;
+
+        this.img = this._config.bgImg;
+        this.x = this._config.BG_X;
+        this.y = this._config.BG_Y;
+        this.width = this._config.BG_WIDTH;
+        this.height = this._config.BG_HEIGHT;
     }
-    create(img, x, y, width, height) {
-        const background = {
-            img: img,
-            x: x, 
-            y: y, 
-            width: width, 
-            height: height 
-        }
-        this.ctx.drawImage(background.img,background.x, background.y, background.width, background.height);
-        
+    draw() {
+        this._drawEngine.draw(
+            this.img,
+            this.x, 
+            this.y, 
+            this.width, 
+            this.height 
+        )
     }
-    animate(speed) {
-        this.create();
-    }
+    // animate() {
+    //     this.draw();
+    // }
 }

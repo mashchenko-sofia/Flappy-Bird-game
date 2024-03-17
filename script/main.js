@@ -14,6 +14,7 @@ game._config.continueBtn.addEventListener("click", () => {
 
 
 
+// KEYBOARD
 document.addEventListener("keydown", (e) => {
     e.preventDefault();
     if (e.code === 'Space') {
@@ -22,12 +23,12 @@ document.addEventListener("keydown", (e) => {
     } 
     if (e.code === 'Tab' || e.code === 'Escape') { 
         game.stop();
-
-        // game._config.continueBtn.classList.remove('invisible');
     }
 });
-document.addEventListener("click", (e) => {
+
+// MOUSE 
+document.addEventListener("click", () => {
     game.bird.fly();
-    // game._physicsEngine.resetSpeed();
 });
 
+// GAMEPAD

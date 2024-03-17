@@ -11,7 +11,7 @@
 <body>
     <div class="game">
         <nav class="menu">
-            <div id="game-over-window" class="invisible">
+            <div class="game-over-window invisible">
                 <h1 class="game-over-window__title">Game Over!</h1>
                 <p class="game-over-window__text">Your score is <span class="game-over-window__score"></span>!</p>
             </div>
@@ -22,27 +22,27 @@
         <div class="instructions invisible">
             <h2>Instructions</h2>
             <ol>
-              <!-- <li>Press 'click' to start the game</li> -->
-              <!-- <li>Press 'click', 'Space Bar', 'w' or 'Arrow Up' to make flappy fly</li> -->
-              <!-- <li>Press 'C' to clear Best Score</li> -->
-              <!-- <li>Press 'R' to restart game</li> -->
-              <!-- <li>Don't collide in the pipes</li> -->
+                <!-- <li>Press 'click' to start the game</li> -->
+                <!-- <li>Press 'click', 'Space Bar', 'w' or 'Arrow Up' to make flappy fly</li> -->
+                <!-- <li>Press 'C' to clear Best Score</li> -->
+                <!-- <li>Press 'R' to restart game</li> -->
+                <!-- <li>Don't collide in the pipes</li> -->
             </ol>
         </div>
         <canvas id="canvas" class="blured"></canvas>
-        <div id="game-info" class="invisible">
-            <div class="score">
+        <div class="game-info invisible">
+            <div class="info score">
                 <h3 class="score__title">Score:</h3>
                 <span class="score__count"></span>
             </div>
-            <div class="record">
+            <div class="info record">
                 <h3 class="record__title">Record:</h3>
                 <span class="record__count"></span>
             </div>
-        </div>      
+        </div>
     </div>
-    <script src="./script/main.js" type="module" ></script>
-    <script src="./script/events.js" type="module" ></script>
+    <script src="./script/main.js" type="module"></script>
+    <script src="./script/events.js" type="module"></script>
 </body>
 
 </html>
