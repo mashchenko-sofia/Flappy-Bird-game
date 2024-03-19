@@ -67,9 +67,23 @@ export default class Game {
     }
     start() {
         this.reset();
-        this.score.update();
-
         this.animate();
+
+        this.keyDownEvent = document.addEventListener("keydown", (e) => {
+            e.preventDefault();
+            if (e.code === 'Space') {
+                this.bird.fly();
+            } 
+            if (e.code === 'Tab' || e.code === 'Escape') { 
+                this.stop();
+            }
+        });
+
+        this.clickEvent = document.addEventListener("click", (e) => {
+            e.preventDefault();
+            this.bird.fly();
+        });
+
 
         this._config.newGameBtn.classList.add('invisible');
         this._config.continueBtn.classList.add('invisible');
@@ -80,6 +94,8 @@ export default class Game {
     }
     stop() {
         cancelAnimationFrame(this._gameAnimationId);
+        document.removeEventListener("keydown", this.keyDownEvent);
+        document.removeEventListener("click", this.clickEvent);
 
         this._physicsEngine.resetSpeed()
 
