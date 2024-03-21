@@ -32,9 +32,6 @@ export default class Pipe {
     getHeightDown(heightUp) {
         return this._heightSum - heightUp;
     }
-    // getYDown(heightDown) {
-    //     return this._fieldHeight - heightDown;
-    // }
     isOnPoint(pipeCoor, point) {
         return (pipeCoor % point <= this._moveSpeed) && (pipeCoor % point >= 0) && (pipeCoor / point < 2);
     }
@@ -55,7 +52,7 @@ export default class Pipe {
         }
 
         const lastPipeCoor = this._pipes[this._pipes.length - 1].x;
-        if (this.isOnPoint(lastPipeCoor, this._spawnPoint) && (lastPipeCoor <= this._spawnPoint)) {
+        if (this.isOnPoint(lastPipeCoor, this._spawnPoint)) {
             this.newPipe();
         }
 
@@ -68,13 +65,10 @@ export default class Pipe {
             const pipeMidpointCoor = this._pipes[i].x + this._width / 2;
             if (this.isOnPoint(pipeMidpointCoor, this._scorePoint) && (pipeMidpointCoor >= this._scorePoint)) {
                 this._score.increaseScore();
-                // this._config.scoreSound.play();
-                // this._config.scoreSound.currentTime = 0;
 
                 // УВЕЛИЧЕНИЕ СЛОЖНОСТИ 
                 if (this._score.currentScore == 10 || this._score.currentScore % 50 == 0 && this._score.currentScore > 0) {
                     this._moveSpeed += 0.5;
-                    console.log('speed', this._moveSpeed);
                 }
             }
 
@@ -82,7 +76,15 @@ export default class Pipe {
             if (pipeLastpointCoor < 0) {
                 this._pipes.shift();
             }
+
+            this.pipeLeftCoor = this._pipes[i].x;
+            this.pipeRightCoor = this._pipes[i].x + this._width;
+            // this.pipeUpTopCoor = this._yUp;
+            this.pipeUpBottomCoor = this._yUp + this._pipes[i].heightUp;
+            this.pipeDownTopCoor = this._pipes[i].yDown;
+            // this.pipeDownBottomCoor = this._pipes[i].yDown + this._pipes[i].heightDown;
         }
+
     }
     draw(index) {
             this._drawEngine.draw(
@@ -100,24 +102,19 @@ export default class Pipe {
                 this._pipes[index].heightUp,
             )
     }
+    hittedBird(bird) {
+        const birdLeftCoor = bird.x;
+        const birdRightCoor = bird.x + bird.width;
+        const birdTopCoor = bird.y;
+        const birdBottomCoor = bird.y + bird.height;
 
-    //     this.pipeDownSpaceVer = [this.pipeDown.y + this.PADDING, this.pipeDown.y + this.pipeDown.height];
-    //     this.pipeDownSpaceHor = [this.pipeDown.x + xOffset + this.PADDING, this.pipeDown.x + xOffset + this.pipeDown.width - this.PADDING];
-    //     this.pipeUpSpaceVer = [this.pipeUp.y, this.pipeUp.y + this.pipeUp.height - this.PADDING];
-    //     this.pipeUpSpaceHor = [this.pipeUp.x + xOffset + this.PADDING, this.pipeUp.x + xOffset + this.pipeUp.width - this.PADDING];
-        
-
-    // }
-    hittedPipe(birdX, birdY) {
         if (
-            (birdX >= this.pipeDownSpaceHor[0] && birdX <= this.pipeDownSpaceHor[1] && 
-            birdY >= this.pipeDownSpaceVer[0] && birdY <= this.pipeDownSpaceVer[1] )
-            ||
-            (birdX >= this.pipeUpSpaceHor[0] && birdX <= this.pipeUpSpaceHor[1] && 
-            birdY >= this.pipeUpSpaceVer[0] && birdY <= this.pipeUpSpaceVer[1])
-            ) {
-                return true;
-            }
+            (birdRightCoor >= this.pipeLeftCoor) &&
+            (birdLeftCoor <= this.pipeRightCoor) &&
+            (birdTopCoor <= this.pipeUpBottomCoor || birdBottomCoor >= this.pipeDownTopCoor)
+        ) {
+            return true;
+        }
         return false;
     }
 }

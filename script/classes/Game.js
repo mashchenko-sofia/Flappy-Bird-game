@@ -55,8 +55,10 @@ export default class Game {
         this._drawEngine.clear();
 
         this.update();
-
-        if(this.bird.isDead(this._config.fieldHeight)) {
+        
+        if  (this.bird.hittedGround(this._config.fieldHeight) || 
+            this.pipe.hittedBird(this.bird)) 
+            {
             this._config.dieSound.play();
             this._config.dieSound.currentTime = 0;
             
@@ -107,6 +109,7 @@ export default class Game {
     finish() {
         this.stop();
         this._config.continueBtn.classList.add('invisible');
+
         
         // this.score.setRecord()
         setTimeout(() => {

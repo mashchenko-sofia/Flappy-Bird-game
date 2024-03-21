@@ -89,7 +89,8 @@ export default class Config {
     this.PIPE_GAP = this.PIPE_WIDTH * 2.5; // 3
 
 
-    this.PIPE_PADDING = 50;
+    this.PIPE_PADDING = 0;
+    // console.log(this.PIPE_PADDING)
     this.PIPE_MOVE_SPEED = 3;
 
 

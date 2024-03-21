@@ -8,6 +8,7 @@ export default class Score {
         
         this._currentScore = 0;
         this.getRecord();
+        this.update();
     }      
     update() {
         this.setRecord();
