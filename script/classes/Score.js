@@ -7,6 +7,7 @@ export default class Score {
         this._gameOverWindowScore = this._config.gameOverWindowScore;
         
         this._currentScore = 0;
+        
         this.getRecord();
         this.update();
     }      
@@ -31,7 +32,6 @@ export default class Score {
         } else {
             localStorage.setItem("record", this._record);
         }
-
     }
     getRecord() {
         this._record = localStorage.getItem("record");

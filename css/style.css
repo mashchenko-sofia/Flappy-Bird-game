@@ -1,9 +1,8 @@
 body {
     font-family: 'Kode Mono', monospace;
-    /* font-family: 'Micro 5', sans-serif; */
 }
 h1 {
-    font-size: 5em;
+    font-size: calc(1em + 9vw);
     font-weight: 700;
     text-align: center;
 }

@@ -18,7 +18,4 @@ export default class Background {
             this.height 
         )
     }
-    // animate() {
-    //     this.draw();
-    // }
 }

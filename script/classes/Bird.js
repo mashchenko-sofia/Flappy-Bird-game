@@ -9,8 +9,6 @@ export default class Bird {
         this.height = this._config.BIRD_WIDTH;
         this.x = this._config.BIRD_X;
         this.y = this._config.BIRD_Y;
-        // this.canvasX = this.x + (this._width / 2);
-        // this.canvasY = this.y + (this._height / 2);
         this.xForCanvas = -(this.width / 2);
         this.yForCanvas = -(this.height / 2);
         
@@ -21,7 +19,6 @@ export default class Bird {
         this._flySound = this._config.flySound;
 
         this._state = 0;
-        this._flapId = null;
     }
     update() {
         this._physicsEngine.update(this);
@@ -31,20 +28,20 @@ export default class Bird {
         }
         
         if (this._physicsEngine.speed > this._physicsEngine.fallStartSpeed * 50) {
-            this._rotationDegree = 50;
+            this._state = 8;
         } else if (this._physicsEngine.speed > this._physicsEngine.fallStartSpeed * 25) {
             this._rotationDegree = 10;
+            this._state = 0;
         } 
         
         this._angle = this._rotationDegree * Math.PI / 180;
 
-
-        this.draw(0);
+        this.draw(this._state, this._angle);
     }
-    draw(state) {
+    draw(state, angle) {
         this._drawEngine.ctx.save();
         this._drawEngine.ctx.translate(this.x + (this.width / 2), this.y + (this.height / 2));
-        this._drawEngine.ctx.rotate(this._angle);
+        this._drawEngine.ctx.rotate(angle);
         this._drawEngine.draw(
             this._imgs[state],
             this.xForCanvas,
@@ -57,25 +54,12 @@ export default class Bird {
     fly() {
         this.y -= this._flySpeed;
         this._rotationDegree = -20;
+        this._state = 5;
 
         this._physicsEngine.resetSpeed();
-        this.animate();
 
         this._flySound.play();
         this._flySound.currentTime = 0;
-    }
-    animate() {
-        this._flapId = setInterval(this.flap(), 10);
-    }
-    flap() {
-        if (this._state >= this._imgs.length) {
-            this._state = 0;
-            clearInterval(this._flapId);
-        } else {
-            this.draw(this._state);
-
-            this._state +=1;
-        }
     }
     hittedGround(fieldHeight) {
         const i = this.y + this.height + this._config.GROUND_HEIGHT;

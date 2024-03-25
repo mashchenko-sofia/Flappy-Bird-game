@@ -10,26 +10,18 @@
 
 <body>
     <div class="game">
+
         <nav class="menu">
             <div class="game-over-window invisible">
                 <h1 class="game-over-window__title">Game Over!</h1>
                 <p class="game-over-window__text">Your score is <span class="game-over-window__score"></span>!</p>
             </div>
             <button id="new-game-btn" class="button">New Game</button>
-            <!-- <button id="stop-btn" class="button">Stop</button> -->
             <button id="continue-btn" class="button invisible">Continue</button>
         </nav>
-        <div class="instructions invisible">
-            <h2>Instructions</h2>
-            <ol>
-                <!-- <li>Press 'click' to start the game</li> -->
-                <!-- <li>Press 'click', 'Space Bar', 'w' or 'Arrow Up' to make flappy fly</li> -->
-                <!-- <li>Press 'C' to clear Best Score</li> -->
-                <!-- <li>Press 'R' to restart game</li> -->
-                <!-- <li>Don't collide in the pipes</li> -->
-            </ol>
-        </div>
+
         <canvas id="canvas" class="blured"></canvas>
+
         <div class="game-info invisible">
             <div class="info score">
                 <h3 class="score__title">Score:</h3>
@@ -40,7 +32,9 @@
                 <span class="record__count"></span>
             </div>
         </div>
+
     </div>
+    
     <script src="./script/main.js" type="module"></script>
     <script src="./script/events.js" type="module"></script>
 </body>

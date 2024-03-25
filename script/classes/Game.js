@@ -71,7 +71,7 @@ export default class Game {
         this.reset();
         this.animate();
 
-        this.keyDownEvent = document.addEventListener("keydown", (e) => {
+        this.keyDownFunction = (e) => {
             e.preventDefault();
             if (e.code === 'Space') {
                 this.bird.fly();
@@ -79,13 +79,15 @@ export default class Game {
             if (e.code === 'Tab' || e.code === 'Escape') { 
                 this.stop();
             }
-        });
+        };
 
-        this.clickEvent = document.addEventListener("click", (e) => {
+        this.clickFunction = (e) => {
             e.preventDefault();
             this.bird.fly();
-        });
+        };
 
+        document.addEventListener("keydown", this.keyDownFunction);
+        document.addEventListener("click", this.clickFunction);
 
         this._config.newGameBtn.classList.add('invisible');
         this._config.continueBtn.classList.add('invisible');
@@ -96,8 +98,8 @@ export default class Game {
     }
     stop() {
         cancelAnimationFrame(this._gameAnimationId);
-        document.removeEventListener("keydown", this.keyDownEvent);
-        document.removeEventListener("click", this.clickEvent);
+        document.removeEventListener("keydown", this.keyDownFunction);
+        document.removeEventListener("click", this.clickFunction);
 
         this._physicsEngine.resetSpeed()
 

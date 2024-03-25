@@ -11,7 +11,7 @@ game._config.continueBtn.addEventListener("click", () => {
 
 
 
-// GAMEPAD
+// GAMEPAD 
 window.addEventListener("gamepadconnected", (event) => {
     const update = () => {
         for (const gamepad of navigator.getGamepads()) {

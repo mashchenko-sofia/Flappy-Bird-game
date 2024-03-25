@@ -56,7 +56,6 @@ export default class Pipe {
             this.newPipe();
         }
 
-
         for (let i = 0; i < this._pipes.length; i++) {
             this.draw(i);
 
@@ -77,12 +76,10 @@ export default class Pipe {
                 this._pipes.shift();
             }
 
-            this.pipeLeftCoor = this._pipes[i].x;
-            this.pipeRightCoor = this._pipes[i].x + this._width;
-            // this.pipeUpTopCoor = this._yUp;
-            this.pipeUpBottomCoor = this._yUp + this._pipes[i].heightUp;
-            this.pipeDownTopCoor = this._pipes[i].yDown;
-            // this.pipeDownBottomCoor = this._pipes[i].yDown + this._pipes[i].heightDown;
+            this.pipeLeftCoor = this._pipes[i].x + this._padding;
+            this.pipeRightCoor = this._pipes[i].x + this._width - this._padding;
+            this.pipeUpBottomCoor = this._yUp + this._pipes[i].heightUp - this._padding;
+            this.pipeDownTopCoor = this._pipes[i].yDown + this._padding;
         }
 
     }
